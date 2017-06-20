@@ -1,0 +1,22 @@
+{
+  "name": "dmidecode-vendor-mappings",
+  "version": "1.0.0",
+  "description": "Dmidecode vendor mappings used to check if a machine is physical or virtual.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha -R spec **/*.spec.js"
+  },
+  "author": "Jordan Eudy",
+  "license": "MIT",
+  "dependencies": {
+    "fs": "0.0.1-security"
+  },
+  "devDependencies": {
+    "mocha": "^3.4.2",
+    "should": "^11.2.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RedHatInsights/dmidecode-vendor-mappings.git"
+  }
+}
