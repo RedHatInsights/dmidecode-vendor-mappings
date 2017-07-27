@@ -38,12 +38,12 @@ it('should only return the manufacturer when the manufactuer, product, and famil
 });
 
 it('should only return the manufacturer when the manufactuer and product are equal and the product is not listed in the mappings', function () {
-    const vendor_info = validator.validateVendorInformation('OEM', '', 'OEM');
+    const vendor_info = validator.validateVendorInformation('Bochs', '', 'Bochs');
 
-    vendor_info.manufacturer.should.equal('OEM');
+    vendor_info.manufacturer.should.equal('Bochs');
     vendor_info.family.should.equal('Unknown');
     vendor_info.product_name.should.equal('Unknown');
-    vendor_info.isVirtual.should.be.false();
+    vendor_info.isVirtual.should.be.true();
 });
 
 it('should only return the product when the manufactuer and product are equal and the manufacturer is not listed in the mappings', function () {

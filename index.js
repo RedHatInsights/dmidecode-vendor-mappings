@@ -1,7 +1,7 @@
 const lc_vendor_map   = require('./lc_vendor_mappings.json');
 const vendor_mappings = require('./vendor_mappings.json');
 
-exports.validateVendorInformation = function (manufacturer, family, product_name) {
+module.exports = function (manufacturer, family, product_name) {
     const vendors      = lc_vendor_map.manufacturers;
     const virtual      = lc_vendor_map.product_names['virtual'];
     const physical     = lc_vendor_map.product_names['physical'];
@@ -33,6 +33,11 @@ exports.validateVendorInformation = function (manufacturer, family, product_name
                 returnObj.manufacturer = 'Unknown';
                 returnObj.family = 'Unknown';
                 break;
+            case virtual.indexOf(lcProduct) >= 0:
+                returnObj.isVirtual = true;
+                returnObj.manufacturer = 'Unknown';
+                returnObj.family = 'Unknown';
+                break;
             case families.indexOf(lcFamily) >= 0:
                 returnObj.manufacturer = 'Unknown';
                 returnObj.product_name = 'Unknown';
@@ -44,6 +49,10 @@ exports.validateVendorInformation = function (manufacturer, family, product_name
         }
     } else if (lcProduct === lcManufacturer) {
         switch(true) {
+            case vendors.virtual.indexOf(lcManufacturer) >= 0:
+                returnObj.isVirtual = true;
+                returnObj.product_name = 'Unknown';
+                break;
             case physical.indexOf(lcProduct) >= 0:
                 returnObj.manufacturer = 'Unknown';
                 break;
@@ -72,8 +81,10 @@ exports.validateVendorInformation = function (manufacturer, family, product_name
             returnObj.family = vendor_mappings.families[index];
         }
 
-        if ((index = vendors.indexOf(lcManufacturer)) >= 0) {
-            returnObj.manufacturer = vendor_mappings.manufacturers[index];
+        if ((index = vendors.virtual.indexOf(lcManufacturer)) >= 0) {
+            returnObj.manufacturer = vendor_mappings.manufacturers.virtual[index];
+        } else if ((index = vendors.other.indexOf(lcManufacturer)) >= 0) {
+            returnObj.manufacturer = vendor_mappings.manufacturers.other[index];
         }
 
         if ((index = virtual.indexOf(lcProduct)) >= 0) {
