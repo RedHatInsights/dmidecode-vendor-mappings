@@ -6,9 +6,9 @@ module.exports = function (manufacturer, family, product_name) {
     const virtual      = lc_vendor_map.product_names['virtual'];
     const physical     = lc_vendor_map.product_names['physical'];
     const families     = lc_vendor_map.families;
-    let lcFamily       = family.toLowerCase();
-    let lcProduct      = product_name.toLowerCase();
-    let lcManufacturer = manufacturer.toLowerCase();
+    let lcFamily       = family.toLowerCase() || '';
+    let lcProduct      = product_name.toLowerCase() || '';
+    let lcManufacturer = manufacturer.toLowerCase() || '';
     let returnObj      = {
         manufacturer: manufacturer,
         family: family,
