@@ -1,14 +1,14 @@
-const lc_vendor_map   = require('./lc_vendor_mappings.json');
-const vendor_mappings = require('./vendor_mappings.json');
+const mappings = require('./prod_vendor_mappings.json');
+const find = require('lodash/find');
 
 module.exports = function (manufacturer, family, product_name) {
     manufacturer = manufacturer || '';
-    family = family || '';
     product_name = product_name || '';
-    const vendors      = lc_vendor_map.manufacturers;
-    const virtual      = lc_vendor_map.product_names['virtual'];
-    const physical     = lc_vendor_map.product_names['physical'];
-    const families     = lc_vendor_map.families;
+    family = family || '';
+    const vendors      = mappings.manufacturers;
+    const virtual      = mappings.product_names['virtual'];
+    const physical     = mappings.product_names['physical'];
+    const families     = mappings.families;
     let lcFamily       = family.toLowerCase();
     let lcProduct      = product_name.toLowerCase();
     let lcManufacturer = manufacturer.toLowerCase();
@@ -23,63 +23,66 @@ module.exports = function (manufacturer, family, product_name) {
 
     // Checks if the manufacturer, product_name, and/or family
     // equal each other.
+    //
+    // Manufacturer takes precedent over families and products
+    // that are not in the vendor mappings when two or more are equal.
+    let phyProd = find(physical, {lcString: lcProduct});
+    let virtProd = find(virtual, {lcString: lcProduct});
+    let fam = find(families, {lcString: lcFamily});
+    let virtMan = find(vendors.virtual, {lcString: lcManufacturer});
+    let otherMan = find(vendors.other, {lcString: lcManufacturer});
     if (lcProduct === lcManufacturer &&
         lcManufacturer === lcFamily) {
-        // defaults to only keeping the manufacture name.
         switch(true) {
-            case physical.indexOf(lcProduct) >= 0:
+            case phyProd:
                 returnObj.manufacturer = 'Unknown';
                 returnObj.family = 'Unknown';
-                break;
-            case virtual.indexOf(lcProduct) >= 0:
+            break;
+            case virtProd:
                 returnObj.isVirtual = true;
                 returnObj.manufacturer = 'Unknown';
                 returnObj.family = 'Unknown';
-                break;
-            case families.indexOf(lcFamily) >= 0:
+            break;
+            case fam:
                 returnObj.manufacturer = 'Unknown';
                 returnObj.product_name = 'Unknown';
-                break;
-            case vendors.virtual.indexOf(lcManufacturer):
+            break;
+            case virtMan:
                 returnObj.isVirtual = true;
                 returnObj.product_name = 'Unknown';
                 returnObj.family = 'Unknown';
-                break;
+            break;
             default:
                 returnObj.product_name = 'Unknown';
                 returnObj.family = 'Unknown';
-                break;
+            break;
         }
     } else if (lcProduct === lcManufacturer) {
-        switch(true) {
-            case vendors.virtual.indexOf(lcManufacturer) >= 0:
-                returnObj.isVirtual = true;
-                returnObj.product_name = 'Unknown';
-                break;
-            case physical.indexOf(lcProduct) >= 0:
-                returnObj.manufacturer = 'Unknown';
-                break;
-            case virtual.indexOf(lcProduct) >= 0:
-                returnObj.isVirtual = true;
-                returnObj.manufacturer = 'Unknown';
-                break;
-            default:
-                returnObj.product_name = 'Unknown';
-                break;
+        if (virtProd) {
+            returnObj.isVirtual = true;
+            returnObj.manufacturer = 'Unknown';
+        } else if (virtMan) {
+            returnObj.isVirtual = true;
+            returnObj.product_name = 'Unknown';
+        } else if (phyProd) {
+            returnObj.manufacturer = 'Unknown';
+        } else {
+            returnObj.product_name = 'Unknown';
         }
     } else if (lcFamily === lcProduct) {
-        if (families.indexOf(lcFamily) >= 0) {
+        // Product takes precedent over family
+        if (fam) {
             returnObj.product = 'Unknown';
-        } else if (virtual.indexOf(lcProduct) >= 0) {
+        } else if (virtProd) {
             returnObj.isVirtual = true;
             returnObj.family = 'Unknown';
         } else {
             returnObj.family = 'Unknown';
         }
     } else if (lcManufacturer === lcFamily) {
-        if (families.indexOf(lcFamily) >= 0) {
+        if (fam) {
             returnObj.manufacturer = 'Unknown';
-        } else if (vendors.virtual.indexOf(lcManufacturer) >= 0) {
+        } else if (virtMan) {
             returnObj.isVirtual = true;
             returnObj.family = 'Unknown';
         } else {
@@ -87,53 +90,51 @@ module.exports = function (manufacturer, family, product_name) {
         }
     }
 
-    if ((index = families.indexOf(lcFamily)) >= 0) {
-        returnObj.family = vendor_mappings.families[index];
+    if (fam && returnObj.fam !== 'Unknown') {
+        returnObj.family = fam.string;
     }
 
-    if ((index = vendors.virtual.indexOf(lcManufacturer)) >= 0) {
+    if (virtMan && returnObj.manufacturer !== 'Unknown') {
         returnObj.isVirtual = true;
-        returnObj.manufacturer = vendor_mappings.manufacturers.virtual[index];
-    } else if ((index = vendors.other.indexOf(lcManufacturer)) >= 0) {
-        returnObj.manufacturer = vendor_mappings.manufacturers.other[index];
+        returnObj.manufacturer = virtMan.string;
+    } else if (otherMan && returnObj.manufacturer !== 'Unknown') {
+        returnObj.manufacturer = otherMan.string;
     }
 
-    if ((index = virtual.indexOf(lcProduct)) >= 0) {
-        returnObj.product_name = vendor_mappings.product_names.virtual[index];
+    if (virtProd && returnObj.product_name !== 'Unknown') {
+        returnObj.product_name = virtProd.string;
         returnObj.isVirtual = true;
-    } else if ((index = physical.indexOf(lcProduct)) >= 0) {
-        returnObj.product_name = vendor_mappings.product_names.physical[index];
+    } else if (phyProd && returnObj.product_name !== 'Unknown') {
+        returnObj.product_name = phyProd.string;
     }
 
     return returnObj;
 }
 
 function checkGrayAndBlackLists(vendor_obj, lcManufacturer, lcFamily, lcProduct) {
-    let keys = Object.keys(vendor_mappings.graylist);
-
-    keys.forEach(function (key) {
-        switch (key.toLowerCase()) {
+    mappings.graylist.forEach(function (val) {
+        switch (val.lcString) {
             case lcProduct:
-                vendor_obj.product_name = vendor_mappings.graylist[key];
-                break;
+                vendor_obj.product_name = val.string;
+            break;
             case lcFamily:
-                vendor_obj.family = vendor_mappings.graylist[key];
-                break;
+                vendor_obj.family = val.string;
+            break;
             case lcManufacturer:
-                vendor_obj.manufacturer = vendor_mappings.graylist[key];
-                break;
+                vendor_obj.manufacturer = val.string;
+            break;
         };
     });
 
-    if (lc_vendor_map.blacklist.indexOf(lcManufacturer) >= 0) {
+    if (find(mappings.blacklist, {lcString: lcManufacturer})) {
         vendor_obj.manufacturer = 'Unknown';
     }
 
-    if (lc_vendor_map.blacklist.indexOf(lcProduct) >= 0) {
+    if (find(mappings.blacklist, {lcString: lcProduct})) {
         vendor_obj.product_name = 'Unknown';
     }
 
-    if (lc_vendor_map.blacklist.indexOf(lcFamily) >= 0) {
+    if (find(mappings.blacklist, {lcString: lcFamily})) {
         vendor_obj.family = 'Unknown';
     }
 }

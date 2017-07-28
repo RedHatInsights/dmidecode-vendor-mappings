@@ -73,7 +73,7 @@ it('should return unknown when a manufacturer, product, or family is a blacklist
     vendor_info.isVirtual.should.be.false();
 });
 
-it('should return the given category when a manufacturer, product, and/or family is not list in the mappings', function () {
+it('should return the given category when a manufacturer, product, and/or family is not listed in the mappings', function () {
     const vendor_info = validator('NewManufacturer', 'newFamily', 'NewProDuct');
 
     vendor_info.manufacturer.should.equal('NewManufacturer');
