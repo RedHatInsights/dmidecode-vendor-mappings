@@ -33,14 +33,14 @@ module.exports = function (manufacturer, family, product_name) {
                 returnObj.manufacturer = 'Unknown';
                 returnObj.family = 'Unknown';
                 break;
-            case virtual.indexOf(lcProduct) >= 0:
-                returnObj.isVirtual = true;
-                returnObj.manufacturer = 'Unknown';
-                returnObj.family = 'Unknown';
-                break;
             case families.indexOf(lcFamily) >= 0:
                 returnObj.manufacturer = 'Unknown';
                 returnObj.product_name = 'Unknown';
+                break;
+            case vendor.virtual.indexOf(lcManufacturer):
+                returnObj.isVirtual = true;
+                returnObj.product_name = 'Unknown';
+                returnObj.family = 'Unknown';
                 break;
             default:
                 returnObj.product_name = 'Unknown';
@@ -82,6 +82,7 @@ module.exports = function (manufacturer, family, product_name) {
         }
 
         if ((index = vendors.virtual.indexOf(lcManufacturer)) >= 0) {
+            returnObj.isVirtual = true;
             returnObj.manufacturer = vendor_mappings.manufacturers.virtual[index];
         } else if ((index = vendors.other.indexOf(lcManufacturer)) >= 0) {
             returnObj.manufacturer = vendor_mappings.manufacturers.other[index];

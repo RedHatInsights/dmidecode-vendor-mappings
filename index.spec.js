@@ -96,3 +96,18 @@ it('should return the corrected string for manufacturers, products, and/or famil
     vendor_info.product_name.should.equal('ProLiant DL160 Gen9');
     vendor_info.isVirtual.should.be.false();
 });
+
+it('should do something', function () {
+    let vendor_info = validator.validateVendorInformation('QEMU', 'LR-MAAS', 'LabRat MAAS');
+
+    vendor_info.manufacturer.should.equal('Armstrong Data Technologies');
+    vendor_info.family.should.equal('LR-MAAS');
+    vendor_info.product_name.should.equal('LabRat MAAS');
+    vendor_info.isVirtual.should.be.false();
+
+    vendor_info = validator.validateVendorInformation('Hewlett-Packard', 'ProLiant', 'ProLiant DL160 Gen9');
+    vendor_info.manufacturer.should.equal('HP');
+    vendor_info.family.should.equal('ProLiant');
+    vendor_info.product_name.should.equal('ProLiant DL160 Gen9');
+    vendor_info.isVirtual.should.be.false();
+});
