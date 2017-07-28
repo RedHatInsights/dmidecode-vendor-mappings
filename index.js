@@ -37,7 +37,7 @@ module.exports = function (manufacturer, family, product_name) {
                 returnObj.manufacturer = 'Unknown';
                 returnObj.product_name = 'Unknown';
                 break;
-            case vendor.virtual.indexOf(lcManufacturer):
+            case vendors.virtual.indexOf(lcManufacturer):
                 returnObj.isVirtual = true;
                 returnObj.product_name = 'Unknown';
                 returnObj.family = 'Unknown';
