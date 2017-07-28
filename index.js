@@ -2,13 +2,16 @@ const lc_vendor_map   = require('./lc_vendor_mappings.json');
 const vendor_mappings = require('./vendor_mappings.json');
 
 module.exports = function (manufacturer, family, product_name) {
+    manufacturer = manufacturer || '';
+    family = family || '';
+    product_name = product_name || '';
     const vendors      = lc_vendor_map.manufacturers;
     const virtual      = lc_vendor_map.product_names['virtual'];
     const physical     = lc_vendor_map.product_names['physical'];
     const families     = lc_vendor_map.families;
-    let lcFamily       = family.toLowerCase() || '';
-    let lcProduct      = product_name.toLowerCase() || '';
-    let lcManufacturer = manufacturer.toLowerCase() || '';
+    let lcFamily       = family.toLowerCase();
+    let lcProduct      = product_name.toLowerCase();
+    let lcManufacturer = manufacturer.toLowerCase();
     let returnObj      = {
         manufacturer: manufacturer,
         family: family,
