@@ -52,7 +52,7 @@ it('should only return the product when the manufactuer and product are equal an
     vendor_info.manufacturer.should.equal('Unknown');
     vendor_info.family.should.equal('Unknown');
     vendor_info.product_name.should.equal('Virtual Machine');
-    vendor_info.isVirtual.should.be.false();
+    vendor_info.isVirtual.should.be.true();
 });
 
 it('should only return the product when the family and product are equal and the product is listed in the mappings', function () {
@@ -61,7 +61,7 @@ it('should only return the product when the family and product are equal and the
     vendor_info.manufacturer.should.equal('Microsoft');
     vendor_info.family.should.equal('Unknown');
     vendor_info.product_name.should.equal('Virtual Machine');
-    vendor_info.isVirtual.should.be.false();
+    vendor_info.isVirtual.should.be.true();
 });
 
 it('should return unknown when a manufacturer, product, or family is a blacklist string', function () {
@@ -97,7 +97,7 @@ it('should return the corrected string for manufacturers, products, and/or famil
     vendor_info.isVirtual.should.be.false();
 });
 
-it('should do something', function () {
+it('should return a virtual system with the given data', function () {
     let vendor_info = validator('QEMU', '', 'Standard PC (i440FX + PIIX, 1996)');
 
     vendor_info.manufacturer.should.equal('QEMU');

@@ -67,37 +67,39 @@ module.exports = function (manufacturer, family, product_name) {
     } else if (lcFamily === lcProduct) {
         if (families.indexOf(lcFamily) >= 0) {
             returnObj.product = 'Unknown';
+        } else if (virtual.indexOf(lcProduct) >= 0) {
+            returnObj.isVirtual = true;
+            returnObj.family = 'Unknown';
         } else {
             returnObj.family = 'Unknown';
         }
     } else if (lcManufacturer === lcFamily) {
         if (families.indexOf(lcFamily) >= 0) {
             returnObj.manufacturer = 'Unknown';
+        } else if (vendors.virtual.indexOf(lcManufacturer) >= 0) {
+            returnObj.isVirtual = true;
+            returnObj.family = 'Unknown';
         } else {
             returnObj.family = 'Unknown';
         }
-    } else {
-        if ((index = families.indexOf(lcFamily)) >= 0) {
-            returnObj.family = vendor_mappings.families[index];
-        }
-
-        if ((index = vendors.virtual.indexOf(lcManufacturer)) >= 0) {
-            returnObj.isVirtual = true;
-            returnObj.manufacturer = vendor_mappings.manufacturers.virtual[index];
-        } else if ((index = vendors.other.indexOf(lcManufacturer)) >= 0) {
-            returnObj.manufacturer = vendor_mappings.manufacturers.other[index];
-        }
-
-        if ((index = virtual.indexOf(lcProduct)) >= 0) {
-            returnObj.product_name = vendor_mappings.product_names['virtual'][index];
-            returnObj.isVirtual = true;
-        } else if ((index = physical.indexOf(lcProduct)) >= 0) {
-            returnObj.product_name = vendor_mappings.product_names['physcial'][index];
-        }
     }
 
-    if (!returnObj.isVirtual) {
-        returnObj.isVirtual
+    if ((index = families.indexOf(lcFamily)) >= 0) {
+        returnObj.family = vendor_mappings.families[index];
+    }
+
+    if ((index = vendors.virtual.indexOf(lcManufacturer)) >= 0) {
+        returnObj.isVirtual = true;
+        returnObj.manufacturer = vendor_mappings.manufacturers.virtual[index];
+    } else if ((index = vendors.other.indexOf(lcManufacturer)) >= 0) {
+        returnObj.manufacturer = vendor_mappings.manufacturers.other[index];
+    }
+
+    if ((index = virtual.indexOf(lcProduct)) >= 0) {
+        returnObj.product_name = vendor_mappings.product_names.virtual[index];
+        returnObj.isVirtual = true;
+    } else if ((index = physical.indexOf(lcProduct)) >= 0) {
+        returnObj.product_name = vendor_mappings.product_names.physical[index];
     }
 
     return returnObj;
