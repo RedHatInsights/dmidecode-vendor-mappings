@@ -1,6 +1,6 @@
 {
   "name": "dmidecode-vendor-mappings",
-  "version": "1.0.6",
+  "version": "1.1.0",
   "description": "Dmidecode vendor mappings used to check if a machine is physical or virtual.",
   "main": "index.js",
   "scripts": {
