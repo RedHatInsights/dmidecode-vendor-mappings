@@ -17,7 +17,7 @@ module.exports = function (manufacturer, family, product_name) {
         family: family,
         product_name: product_name,
         isVirtual: false
-    }
+    };
 
     checkGrayAndBlackLists(returnObj, lcManufacturer, lcFamily, lcProduct);
 
@@ -109,7 +109,7 @@ module.exports = function (manufacturer, family, product_name) {
     }
 
     return returnObj;
-}
+};
 
 function checkGrayAndBlackLists(vendor_obj, lcManufacturer, lcFamily, lcProduct) {
     mappings.graylist.forEach(function (val) {
