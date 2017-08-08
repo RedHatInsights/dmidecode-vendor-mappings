@@ -1,3 +1,4 @@
+/*global require*/
 'use strict';
 
 const mappings = require('./prod_vendor_mappings.json');
