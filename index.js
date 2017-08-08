@@ -1,5 +1,5 @@
 /*global require*/
-'use strict';
+"use strict";
 
 const mappings = require('./prod_vendor_mappings.json');
 const find = require('lodash/find');
