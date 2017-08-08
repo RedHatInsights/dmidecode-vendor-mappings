@@ -1,17 +1,17 @@
 /*global require*/
-"use strict";
+'use strict';
 
-const mappings = require('./prod_vendor_mappings.json');
-const find = require('lodash/find');
+let mappings = require('./prod_vendor_mappings.json');
+let find = require('lodash/find');
 
 module.exports = function (manufacturer, family, product_name) {
     manufacturer = manufacturer || '';
     product_name = product_name || '';
     family = family || '';
-    const vendors      = mappings.manufacturers;
-    const virtual      = mappings.product_names.virtual;
-    const physical     = mappings.product_names.physical;
-    const families     = mappings.families;
+    let vendors      = mappings.manufacturers;
+    let virtual      = mappings.product_names.virtual;
+    let physical     = mappings.product_names.physical;
+    let families     = mappings.families;
     let lcFamily       = family.toLowerCase();
     let lcProduct      = product_name.toLowerCase();
     let lcManufacturer = manufacturer.toLowerCase();
