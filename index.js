@@ -8,8 +8,8 @@ module.exports = function (manufacturer, family, product_name) {
     product_name = product_name || '';
     family = family || '';
     const vendors      = mappings.manufacturers;
-    const virtual      = mappings.product_names['virtual'];
-    const physical     = mappings.product_names['physical'];
+    const virtual      = mappings.product_names.virtual;
+    const physical     = mappings.product_names.physical;
     const families     = mappings.families;
     let lcFamily       = family.toLowerCase();
     let lcProduct      = product_name.toLowerCase();
@@ -150,7 +150,7 @@ function checkGrayAndBlackLists(returnObj, lcManufacturer, lcFamily, lcProduct) 
             case lcManufacturer:
                 returnObj.manufacturer = val.string;
             break;
-        };
+        }
     });
 
     if (find(mappings.blacklist, {lcString: lcManufacturer})) {
