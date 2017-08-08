@@ -1,3 +1,5 @@
+'use strict';
+
 const mappings = require('./prod_vendor_mappings.json');
 const find = require('lodash/find');
 
@@ -16,7 +18,8 @@ module.exports = function (manufacturer, family, product_name) {
         manufacturer: manufacturer,
         family: family,
         product_name: product_name,
-        isVirtual: false
+        isVirtual: false,
+        type: 'Unknown'
     };
 
     checkGrayAndBlackLists(returnObj, lcManufacturer, lcFamily, lcProduct);
@@ -97,6 +100,7 @@ module.exports = function (manufacturer, family, product_name) {
     if (virtMan && returnObj.manufacturer !== 'Unknown') {
         returnObj.isVirtual = true;
         returnObj.manufacturer = virtMan.string;
+        returnObj.type = 'Virtual';
     } else if (otherMan && returnObj.manufacturer !== 'Unknown') {
         returnObj.manufacturer = otherMan.string;
     }
@@ -104,37 +108,60 @@ module.exports = function (manufacturer, family, product_name) {
     if (virtProd && returnObj.product_name !== 'Unknown') {
         returnObj.product_name = virtProd.string;
         returnObj.isVirtual = true;
+        returnObj.type = 'Virtual';
     } else if (phyProd && returnObj.product_name !== 'Unknown') {
         returnObj.product_name = phyProd.string;
+        returnObj.type = 'Physical';
     }
+
+    // looks to see if the manufacturer, product_name,
+    // and family strings contain any virtual system
+    // strings.
+    isVirtual(returnObj);
 
     return returnObj;
 };
 
-function checkGrayAndBlackLists(vendor_obj, lcManufacturer, lcFamily, lcProduct) {
+function isVirtual(returnObj) {
+    let manufacturer = returnObj.manufacturer.toLowerCase();
+    let fam = returnObj.family.toLowerCase();
+    let product = returnObj.product_name.toLowerCase();
+
+    if (!returnObj.isVirtual) {
+        mappings.virtualStrings.forEach(function (str) {
+            if (!returnObj.isVirtual && (manufacturer.includes(str) ||
+                fam.includes(str) || product.includes(str))) {
+                returnObj.isVirtual = true;
+                returnObj.type = 'Virtual';
+            }
+        });
+    }
+}
+
+function checkGrayAndBlackLists(returnObj, lcManufacturer, lcFamily, lcProduct) {
     mappings.graylist.forEach(function (val) {
         switch (val.lcString) {
             case lcProduct:
-                vendor_obj.product_name = val.string;
+                returnObj.product_name = val.string;
             break;
             case lcFamily:
-                vendor_obj.family = val.string;
+                returnObj.family = val.string;
             break;
             case lcManufacturer:
-                vendor_obj.manufacturer = val.string;
+                returnObj.manufacturer = val.string;
             break;
         };
     });
 
     if (find(mappings.blacklist, {lcString: lcManufacturer})) {
-        vendor_obj.manufacturer = 'Unknown';
+        returnObj.manufacturer = 'Unknown';
     }
 
     if (find(mappings.blacklist, {lcString: lcProduct})) {
-        vendor_obj.product_name = 'Unknown';
+        returnObj.product_name = 'Unknown';
     }
 
     if (find(mappings.blacklist, {lcString: lcFamily})) {
-        vendor_obj.family = 'Unknown';
+        returnObj.family = 'Unknown';
     }
 }
