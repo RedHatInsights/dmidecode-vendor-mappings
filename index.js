@@ -1,21 +1,21 @@
 /*global require*/
 'use strict';
 
-let mappings = require('./prod_vendor_mappings.json');
-let find = require('lodash/find');
+var mappings = require('./prod_vendor_mappings.json');
+var find = require('lodash/find');
 
 module.exports = function (manufacturer, family, product_name) {
     manufacturer = manufacturer || '';
     product_name = product_name || '';
     family = family || '';
-    let vendors      = mappings.manufacturers;
-    let virtual      = mappings.product_names.virtual;
-    let physical     = mappings.product_names.physical;
-    let families     = mappings.families;
-    let lcFamily       = family.toLowerCase();
-    let lcProduct      = product_name.toLowerCase();
-    let lcManufacturer = manufacturer.toLowerCase();
-    let returnObj      = {
+    var vendors      = mappings.manufacturers;
+    var virtual      = mappings.product_names.virtual;
+    var physical     = mappings.product_names.physical;
+    var families     = mappings.families;
+    var lcFamily       = family.toLowerCase();
+    var lcProduct      = product_name.toLowerCase();
+    var lcManufacturer = manufacturer.toLowerCase();
+    var returnObj      = {
         manufacturer: manufacturer,
         family: family,
         product_name: product_name,
@@ -30,11 +30,11 @@ module.exports = function (manufacturer, family, product_name) {
     //
     // Manufacturer takes precedent over families and products
     // that are not in the vendor mappings when two or more are equal.
-    let phyProd = find(physical, {lcString: lcProduct});
-    let virtProd = find(virtual, {lcString: lcProduct});
-    let fam = find(families, {lcString: lcFamily});
-    let virtMan = find(vendors.virtual, {lcString: lcManufacturer});
-    let otherMan = find(vendors.other, {lcString: lcManufacturer});
+    var phyProd = find(physical, {lcString: lcProduct});
+    var virtProd = find(virtual, {lcString: lcProduct});
+    var fam = find(families, {lcString: lcFamily});
+    var virtMan = find(vendors.virtual, {lcString: lcManufacturer});
+    var otherMan = find(vendors.other, {lcString: lcManufacturer});
     if (lcProduct === lcManufacturer &&
         lcManufacturer === lcFamily) {
         switch(true) {
@@ -124,9 +124,9 @@ module.exports = function (manufacturer, family, product_name) {
 };
 
 function isVirtual(returnObj) {
-    let manufacturer = returnObj.manufacturer.toLowerCase();
-    let fam = returnObj.family.toLowerCase();
-    let product = returnObj.product_name.toLowerCase();
+    var manufacturer = returnObj.manufacturer.toLowerCase();
+    var fam = returnObj.family.toLowerCase();
+    var product = returnObj.product_name.toLowerCase();
 
     if (!returnObj.isVirtual) {
         mappings.virtualStrings.forEach(function (str) {
