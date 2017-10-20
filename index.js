@@ -4,7 +4,8 @@
 const mappings = require('./prod_vendor_mappings.json');
 const find = require('lodash/find');
 
-module.exports = function (manufacturer, family, product_name) {
+module.exports = function (manufacturer, family, product_name, bios_vendor) {
+    bios_vendor = bios_vendor || '';
     manufacturer = manufacturer || '';
     product_name = product_name || '';
     family = family || '';
@@ -122,15 +123,19 @@ module.exports = function (manufacturer, family, product_name) {
     // looks to see if the manufacturer, product_name,
     // and family strings contain any virtual system
     // strings.
-    isVirtualSystem(returnObj);
+    isVirtualSystem(returnObj, bios_vendor);
 
     return returnObj;
 };
 
-function isVirtualSystem(returnObj) {
+function isVirtualSystem(returnObj, bios_vendor) {
     let manufacturer = returnObj.manufacturer.toLowerCase();
     let fam = returnObj.family.toLowerCase();
     let product = returnObj.product_name.toLowerCase();
+
+    if (manufacturer === 'rhev hypervisor' && bios_vendor === 'seabios') {
+        returnObj.type = 'Virtual';
+    }
 
     if (returnObj.type !== 'Virtual') {
         mappings.virtualStrings.forEach(function (str) {

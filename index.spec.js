@@ -2,7 +2,7 @@ const should    = require('should');
 const validator = require('./index');
 
 it('should return the strings for the virtual system information that is in the vendor mappings', function () {
-    const vendor_info = validator('Red Hat', 'Red Hat Enterprise Linux', 'KVM');
+    const vendor_info = validator('Red Hat', 'Red Hat Enterprise Linux', 'KVM', 'SeaBIOS');
 
     vendor_info.manufacturer.should.equal('Red Hat');
     vendor_info.family.should.equal('Red Hat Enterprise Linux');
@@ -11,7 +11,7 @@ it('should return the strings for the virtual system information that is in the 
 });
 
 it('should return the string for the physical system that is in the vendor mappings', function () {
-    const vendor_info = validator('HP', 'ProLiant', 'ProLiant DL160 Gen9');
+    const vendor_info = validator('HP', 'ProLiant', 'ProLiant DL160 Gen9', 'HP');
 
     vendor_info.manufacturer.should.equal('HP');
     vendor_info.family.should.equal('ProLiant');
@@ -20,7 +20,7 @@ it('should return the string for the physical system that is in the vendor mappi
 });
 
 it('should only return the manufacturer when the manufactuer, product, and family are equal and the family and product are not listed in the mappings', function () {
-    const vendor_info = validator('OEM', 'OEM', 'OEM');
+    const vendor_info = validator('OEM', 'OEM', 'OEM', null);
 
     vendor_info.manufacturer.should.equal('OEM');
     vendor_info.family.should.equal('Unknown');
@@ -29,7 +29,7 @@ it('should only return the manufacturer when the manufactuer, product, and famil
 });
 
 it('should only return the manufacturer when the manufactuer and product are equal and the product is not listed in the mappings', function () {
-    const vendor_info = validator('Bochs', '', 'Bochs');
+    const vendor_info = validator('Bochs', '', 'Bochs', 'Bochs');
 
     vendor_info.manufacturer.should.equal('Bochs');
     vendor_info.family.should.equal('Unknown');
@@ -47,16 +47,16 @@ it('should only return the product when the manufactuer and product are equal an
 });
 
 it('should only return the product when the family and product are equal and the product is listed in the mappings', function () {
-    const vendor_info = validator('Microsoft', 'Virtual Machine', 'Virtual Machine');
+    const vendor_info = validator('Microsoft Corporation', 'Virtual Machine', 'Virtual Machine', 'Microsoft Corporation');
 
-    vendor_info.manufacturer.should.equal('Microsoft');
+    vendor_info.manufacturer.should.equal('Microsoft Corporation');
     vendor_info.family.should.equal('Unknown');
     vendor_info.product_name.should.equal('Virtual Machine');
     vendor_info.type.should.equal('Virtual');
 });
 
 it('should return unknown when a manufacturer, product, or family is a blacklist string', function () {
-    const vendor_info = validator('System Manufacturer', 'To be filled by O.E.M.', 'System Product Name');
+    const vendor_info = validator('System Manufacturer', 'To be filled by O.E.M.', 'System Product Name', 'American Megatrends Inc.');
 
     vendor_info.manufacturer.should.equal('Unknown');
     vendor_info.family.should.equal('Unknown');
@@ -65,7 +65,7 @@ it('should return unknown when a manufacturer, product, or family is a blacklist
 });
 
 it('should return the given category when a manufacturer, product, and/or family is not listed in the mappings', function () {
-    const vendor_info = validator('NewManufacturer', 'newFamily', 'NewProDuct');
+    const vendor_info = validator('NewManufacturer', 'newFamily', 'NewProDuct', null);
 
     vendor_info.manufacturer.should.equal('NewManufacturer');
     vendor_info.family.should.equal('newFamily');
@@ -74,14 +74,14 @@ it('should return the given category when a manufacturer, product, and/or family
 });
 
 it('should return the corrected string for manufacturers, products, and/or families in the graylist', function () {
-    let vendor_info = validator('Arrmstrong Data technologies', 'LR-MAAS', 'LabRat MAAS');
+    let vendor_info = validator('Arrmstrong Data technologies', 'LR-MAAS', 'LabRat MAAS', null);
 
     vendor_info.manufacturer.should.equal('Armstrong Data Technologies');
     vendor_info.family.should.equal('LR-MAAS');
     vendor_info.product_name.should.equal('LabRat MAAS');
     vendor_info.type.should.equal('Physical');
 
-    vendor_info = validator('Hewlett-Packard', 'ProLiant', 'ProLiant DL160 Gen9');
+    vendor_info = validator('Hewlett-Packard', 'ProLiant', 'ProLiant DL160 Gen9', 'HP');
     vendor_info.manufacturer.should.equal('HP');
     vendor_info.family.should.equal('ProLiant');
     vendor_info.product_name.should.equal('ProLiant DL160 Gen9');
@@ -89,7 +89,7 @@ it('should return the corrected string for manufacturers, products, and/or famil
 });
 
 it('should return a virtual system with the given data', function () {
-    let vendor_info = validator('QEMU', '', 'Standard PC (i440FX + PIIX, 1996)');
+    let vendor_info = validator('QEMU', '', 'Standard PC (i440FX + PIIX, 1996)', 'SeaBIOS');
 
     vendor_info.manufacturer.should.equal('QEMU');
     vendor_info.family.should.equal('Unknown');
