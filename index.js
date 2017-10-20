@@ -123,7 +123,7 @@ module.exports = function (manufacturer, family, product_name, bios_vendor) {
     // looks to see if the manufacturer, product_name,
     // and family strings contain any virtual system
     // strings.
-    isVirtualSystem(returnObj, bios_vendor);
+    isVirtualSystem(returnObj, bios_vendor.toLowerCase());
 
     return returnObj;
 };
