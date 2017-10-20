@@ -140,7 +140,7 @@ function isVirtualSystem(returnObj, bios_vendor) {
     if (returnObj.type !== 'Virtual') {
         mappings.virtualStrings.forEach(function (str) {
             if (returnObj.type !== 'Virtual' && (manufacturer.includes(str) ||
-                fam.includes(str) || product.includes(str))) {
+                fam.includes(str) || product.includes(str) || bios_vendor.includes(str))) {
                 returnObj.type = 'Virtual';
             }
         });
