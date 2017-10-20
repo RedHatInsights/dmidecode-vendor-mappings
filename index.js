@@ -133,7 +133,7 @@ function isVirtualSystem(returnObj, bios_vendor) {
     let fam = returnObj.family.toLowerCase();
     let product = returnObj.product_name.toLowerCase();
 
-    if (manufacturer === 'rhev hypervisor' && bios_vendor === 'seabios') {
+    if (product === 'rhev hypervisor' && bios_vendor === 'seabios') {
         returnObj.type = 'Virtual';
     }
 
